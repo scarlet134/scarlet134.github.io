@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RIVALS — DDNet Client</title>
+<meta name="description" content="RIVALS — клиент для DDNet. Дипфлай, бинды, музыка, умное приглушение, колесо фраз, живой ник.">
+<link rel="icon" href="logo.jpg">
+<style>
+:root{--bg:#04060d;--p:#00e0ff;--q:#7b5cff;--r:#ff3d81;--t:#f4f7ff;--m:#8790a8;--l:#ffffff14}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.w{max-width:1200px;margin:0 auto;padding:0 28px}
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.14;filter:saturate(1.3) blur(8px);transform:scale(1.1)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#04060d00 40%,var(--bg)),radial-gradient(circle at 70% 40%,#7b5cff33,transparent 60%)}
+.hero>*{position:relative;z-index:2}
+.top{position:absolute;top:0;left:0;right:0;z-index:5}
+.top .w{display:flex;justify-content:space-between;align-items:center;height:84px}
+.lg{display:flex;align-items:center;gap:12px;font-weight:900;font-size:20px;letter-spacing:4px}
+.lg img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--p)}
+.mn{display:flex;gap:6px;background:#ffffff0d;border:1px solid var(--l);border-radius:99px;padding:6px}
+.mn a{padding:8px 18px;border-radius:99px;font-size:14px;font-weight:600;color:var(--m)}
+.mn a:hover{background:#ffffff14;color:var(--t)}
+.big{font-size:clamp(70px,13vw,190px);font-weight:900;line-height:.85;letter-spacing:-4px;background:linear-gradient(100deg,var(--p),var(--q) 50%,var(--r));-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 40px #7b5cff55)}
+.sub{font-size:clamp(20px,2.4vw,30px);font-weight:300;margin:26px 0 40px;max-width:640px}
+.sub b{font-weight:700}
+.go{display:flex;gap:16px;flex-wrap:wrap}
+.b1{position:relative;padding:18px 36px;font-weight:800;border-radius:6px;background:var(--t);color:#000;clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);transition:.2s}
+.b1:hover{background:var(--p);transform:scale(1.04)}
+.b2{padding:18px 30px;font-weight:700;border:1px solid #ffffff40;border-radius:6px;clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%)}
+.b2:hover{border-color:var(--p);color:var(--p)}
+.ver{margin-top:28px;color:var(--m);font-size:14px;display:flex;gap:20px;flex-wrap:wrap}
+.ver span:before{content:"● ";color:#39ff88}
+/* MARQUEE */
+.mq{border-block:1px solid var(--l);overflow:hidden;padding:22px 0;background:#ffffff05}
+.mq div{display:flex;gap:60px;width:max-content;animation:mq 30s linear infinite;font-weight:900;font-size:28px;letter-spacing:2px;color:#ffffff30}
+.mq i{font-style:normal;color:var(--p)}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* FEATURES */
+.sec{padding:130px 0}
+.lab{font-family:Consolas,monospace;color:var(--p);font-size:14px;letter-spacing:3px}
+.h{font-size:clamp(38px,5vw,64px);font-weight:900;line-height:1;margin:14px 0 0;letter-spacing:-1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:120px}
+.row:nth-child(even) .demo{order:-1}
+.row h3{font-size:42px;font-weight:900;line-height:1.05;margin:12px 0 18px}
+.row p{color:var(--m);font-size:18px;line-height:1.6;max-width:460px}
+.demo{height:340px;border-radius:24px;background:linear-gradient(145deg,#0d1226,#080b17);border:1px solid var(--l);position:relative;overflow:hidden;display:grid;place-items:center}
+.demo:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#ffffff05 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,#ffffff05 0 1px,transparent 1px 40px)}
+kbd{display:inline-grid;place-items:center;min-width:64px;height:64px;padding:0 14px;border-radius:12px;background:#151b33;border:1px solid #2a3360;box-shadow:0 6px 0 #0a0e1f;font:800 26px "Segoe UI";color:var(--t)}
+/* deepfly demo */
+.toast{position:absolute;top:34px;padding:12px 24px;border-radius:10px;font-weight:700;animation:tg 4s infinite}
+.on{background:#0f3b2a;color:#4dffa6;border:1px solid #1d6b4b}
+.off{background:#3b0f1c;color:#ff6b8f;border:1px solid #6b1d33;animation-delay:2s}
+@keyframes tg{0%,5%{opacity:0;transform:translateY(-14px)}10%,45%{opacity:1;transform:none}50%,100%{opacity:0}}
+.press{animation:pr 2s infinite}
+@keyframes pr{0%,8%{transform:translateY(5px);box-shadow:0 1px 0 #0a0e1f;border-color:var(--p)}14%,100%{transform:none}}
+/* nick demo */
+.nick{font-size:58px;font-weight:900;background:linear-gradient(90deg,#ff3d81,#ffb03d,#e8ff3d,#3dff8b,#3dd8ff,#7b5cff,#ff3d81);background-size:200% 100%;-webkit-background-clip:text;color:transparent;animation:rb 2.5s linear infinite}
+@keyframes rb{to{background-position:200% 0}}
+.sb{width:78%;position:relative}
+.sb div{display:flex;justify-content:space-between;padding:12px 18px;border-radius:8px;color:var(--m);font-weight:600}
+.sb .me{background:#ffffff0d;margin:6px 0}
+.sb .me .nick{font-size:22px}
+/* wheel demo */
+.wh{width:270px;height:270px;border-radius:50%;border:1px solid #ffffff22;position:relative;animation:sp 12s linear infinite}
+.wh span{position:absolute;left:50%;top:50%;padding:7px 14px;border-radius:8px;background:#151b33;font-weight:700;transform:translate(-50%,-50%) rotate(var(--a)) translateY(-112px) rotate(calc(-1*var(--a)))}
+.wh span:first-child{background:linear-gradient(135deg,var(--p),var(--q));box-shadow:0 0 24px #00e0ff88}
+@keyframes sp{to{transform:rotate(360deg)}}
+.wh span{animation:usp 12s linear infinite}
+@keyframes usp{from{transform:translate(-50%,-50%) rotate(var(--a)) translateY(-112px) rotate(calc(-1*var(--a)))}to{transform:translate(-50%,-50%) rotate(var(--a)) translateY(-112px) rotate(calc(-1*var(--a) - 360deg))}}
+.wc{position:absolute;font-family:Consolas,monospace;color:var(--p)}
+/* duck demo */
+.eq{display:flex;gap:7px;align-items:flex-end;height:150px}
+.eq i{width:14px;border-radius:4px;background:linear-gradient(0deg,var(--q),var(--p));animation:eq 1s ease-in-out infinite alternate,dk 6s infinite}
+@keyframes eq{from{height:20%}to{height:100%}}
+@keyframes dk{0%,40%{opacity:1}50%,85%{opacity:.25}95%,100%{opacity:1}}
+.mic{position:absolute;bottom:30px;padding:9px 18px;border-radius:99px;background:#5865f2;font-weight:700;font-size:15px;animation:mc 6s infinite}
+@keyframes mc{0%,42%{opacity:0;transform:translateY(10px)}50%,85%{opacity:1;transform:none}92%,100%{opacity:0}}
+/* race demo */
+.rc{width:76%}
+.rc .bar{height:18px;border-radius:99px;background:#ffffff10;overflow:hidden}
+.rc .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--q),var(--r));animation:fill 5s ease-in-out infinite}
+@keyframes fill{from{width:4%}80%,to{width:100%}}
+.rc .pc{font-size:84px;font-weight:900;margin-bottom:14px}
+/* GRID small */
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--l);border:1px solid var(--l);border-radius:20px;overflow:hidden;margin-top:60px}
+.mini div{background:var(--bg);padding:34px 28px;transition:.25s}
+.mini div:hover{background:#0b1022}
+.mini b{display:block;font-size:19px;margin:14px 0 6px}
+.mini p{color:var(--m);font-size:15px;line-height:1.5}
+.mini em{font-style:normal;font-size:28px}
+/* VS */
+table{width:100%;border-collapse:collapse;margin-top:60px;font-size:17px}
+th,td{padding:20px 22px;border-bottom:1px solid var(--l);text-align:left}
+th{color:var(--m);font-weight:600;font-size:14px;letter-spacing:2px;text-transform:uppercase}
+td:nth-child(n+2),th:nth-child(n+2){text-align:center;width:180px}
+td:nth-child(3){color:var(--p);font-weight:800;background:#00e0ff08}
+td:nth-child(2){color:#ffffff40}
+/* trailer */
+.tr{margin-top:60px;border-radius:24px;overflow:hidden;border:1px solid var(--l);box-shadow:0 0 120px #7b5cff33}
+.tr video{width:100%;display:block}
+/* FAQ */
+details{border-bottom:1px solid var(--l);padding:26px 0}
+summary{cursor:pointer;font-size:21px;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+summary:after{content:"+";color:var(--p);font-size:28px;transition:.2s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{color:var(--m);margin-top:14px;font-size:17px;line-height:1.6;max-width:800px}
+/* END */
+.end{text-align:center;padding:160px 0;position:relative;overflow:hidden}
+.end:before{content:"RIVALS";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:28vw;font-weight:900;color:#ffffff05;letter-spacing:-10px;white-space:nowrap}
+.end img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid var(--p);box-shadow:0 0 60px #00e0ff66;margin-bottom:30px}
+.end .h{position:relative}
+.end p{color:var(--m);font-size:20px;margin:20px 0 44px;position:relative}
+.end .go{justify-content:center;position:relative}
+footer{border-top:1px solid var(--l);padding:30px 0;color:var(--m);font-size:14px}
+footer .w{display:flex;justify-content:space-between}
+.rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media(max-width:900px){.mn{display:none}.row{grid-template-columns:1fr;gap:34px;margin-top:80px}.row:nth-child(even) .demo{order:0}.mini{grid-template-columns:1fr 1fr}td:nth-child(n+2),th:nth-child(n+2){width:80px}footer .w{flex-direction:column;gap:8px}}
+</style>
+</head>
+<body>
+<section class="hero">
+ <video src="rivals_ad.mp4" autoplay muted loop playsinline></video>
+ <div class="top"><div class="w">
+  <a class="lg" href="#"><img src="logo.jpg" alt="">RIVALS</a>
+  <nav class="mn"><a href="#f">Фишки</a><a href="#vs">Сравнение</a><a href="#t">Трейлер</a><a href="#faq">FAQ</a></nav>
+ </div></div>
+ <div class="w">
+  <div class="lab">// DDNET CLIENT</div>
+  <div class="big">RIVALS</div>
+  <p class="sub">Клиент для DDNet, где всё <b>под рукой</b>. Летай, общайся и слушай музыку, не выходя из игры.</p>
+  <div class="go">
+   <a class="b1" href="https://github.com/scarlet134/rivals-client/releases/latest">СКАЧАТЬ БЕСПЛАТНО</a>
+   <a class="b2" href="#t">▶ Трейлер</a>
+  </div>
+  <div class="ver"><span>Windows</span><span>На базе DDNet 18</span><span>Открытый код</span></div>
+ </div>
+</section>
+
+<div class="mq"><div>
+ <span>ДИПФЛАЙ <i>✦</i></span><span>BIND <i>✦</i></span><span>МУЗЫКА <i>✦</i></span><span>% КАРТЫ <i>✦</i></span><span>КОЛЕСО ФРАЗ <i>✦</i></span><span>ЖИВОЙ НИК <i>✦</i></span><span>WAR LIST <i>✦</i></span><span>ДРУЗЬЯ <i>✦</i></span>
+ <span>ДИПФЛАЙ <i>✦</i></span><span>BIND <i>✦</i></span><span>МУЗЫКА <i>✦</i></span><span>% КАРТЫ <i>✦</i></span><span>КОЛЕСО ФРАЗ <i>✦</i></span><span>ЖИВОЙ НИК <i>✦</i></span><span>WAR LIST <i>✦</i></span><span>ДРУЗЬЯ <i>✦</i></span>
+</div></div>
+
+<section class="sec" id="f"><div class="w">
+ <div class="lab rv">// 01 — ФИШКИ</div>
+ <h2 class="h rv">Не просто скин.<br>Новый клиент.</h2>
+
+ <div class="row rv">
+  <div><div class="lab">ДИПФЛАЙ</div><h3>Одна кнопка вместо трёх биндов</h3><p>Нажми <b>B</b>, и дипфлай включён. Нажми ещё раз, и он выключен. Сверху экрана появится подсказка, так что ты всегда знаешь, что сейчас включено.</p></div>
+  <div class="demo"><div class="toast on">Дипфлай включён</div><div class="toast off">Дипфлай выключен</div><kbd class="press">B</kbd></div>
+ </div>
+
+ <div class="row rv">
+  <div><div class="lab">% КАРТЫ</div><h3>Видишь, сколько осталось</h3><p>Процент пройденной карты прямо в HUD. Удобно на длинных мапах и в забегах с друзьями.</p></div>
+  <div class="demo"><div class="rc"><div class="pc">87%</div><div class="bar"><i></i></div></div></div>
+ </div>
+
+ <div class="row rv">
+  <div><div class="lab">УМНОЕ ПРИГЛУШЕНИЕ</div><h3>Друзья говорят, музыка тише</h3><p>Клиент сам слышит голос в Discord и плавно убавляет музыку. Друзья замолчали, и громкость вернулась.</p></div>
+  <div class="demo"><div class="eq"><i style="animation-delay:-.1s,0s"></i><i style="animation-delay:-.5s,0s"></i><i style="animation-delay:-.3s,0s"></i><i style="animation-delay:-.8s,0s"></i><i style="animation-delay:-.2s,0s"></i><i style="animation-delay:-.6s,0s"></i><i style="animation-delay:-.4s,0s"></i><i style="animation-delay:-.9s,0s"></i><i style="animation-delay:-.15s,0s"></i><i style="animation-delay:-.7s,0s"></i></div><div class="mic">🎙 Dima говорит…</div></div>
+ </div>
+
+ <div class="row rv">
+  <div><div class="lab">ЖИВОЙ НИК</div><h3>Тебя заметят в табе</h3><p>Ник переливается радугой или цветами RIVALS. Скорость настраивается, превью есть прямо в настройках.</p></div>
+  <div class="demo"><div class="sb"><div><span>1. Kirill</span><span>02:14</span></div><div class="me"><span class="nick">funny pay</span><span>02:31</span></div><div><span>3. Dima</span><span>03:02</span></div></div></div>
+ </div>
+
+ <div class="row rv">
+  <div><div class="lab">КОЛЕСО ФРАЗ</div><h3>Зажал G, сказал всё</h3><p>8 своих фраз по кругу. Наведи мышью, отпусти, и сообщение ушло в чат. Писать во время забега больше не надо.</p></div>
+  <div class="demo"><div class="wh"><span style="--a:0deg">gg</span><span style="--a:45deg">sry</span><span style="--a:90deg">go!</span><span style="--a:135deg">wait</span><span style="--a:180deg">ty</span><span style="--a:225deg">nice</span><span style="--a:270deg">help?</span><span style="--a:315deg">lol</span></div><div class="wc">[ G ]</div></div>
+ </div>
+
+ <div class="mini rv">
+  <div><em>⌨️</em><b>Вкладка Bind</b><p>Все бинды клиента на одной странице.</p></div>
+  <div><em>🎵</em><b>Плеер</b><p>Музыка в игре со своим HUD.</p></div>
+  <div><em>👥</em><b>Друзья</b><p>Видно, кто онлайн и на каком сервере.</p></div>
+  <div><em>⚔️</em><b>War List</b><p>Враги подсвечены, их не пропустишь.</p></div>
+  <div><em>💬</em><b>Фильтр чата</b><p>Упоминания и важное видно сразу.</p></div>
+  <div><em>🔤</em><b>Шрифты</b><p>Меняй шрифт интерфейса под себя.</p></div>
+  <div><em>⚡</em><b>Оптимизация</b><p>Больше FPS даже на слабом ПК.</p></div>
+  <div><em>🎨</em><b>Визуалы</b><p>HUD, значок и мелочи интерфейса.</p></div>
+ </div>
+</div></section>
+
+<section class="sec" id="vs" style="padding-top:0"><div class="w">
+ <div class="lab rv">// 02 — СРАВНЕНИЕ</div>
+ <h2 class="h rv">DDNet vs RIVALS</h2>
+ <table class="rv">
+  <tr><th>Функция</th><th>DDNet</th><th>RIVALS</th></tr>
+  <tr><td>Дипфлай одной кнопкой</td><td>—</td><td>✓</td></tr>
+  <tr><td>% пройденной карты</td><td>—</td><td>✓</td></tr>
+  <tr><td>Музыка в игре</td><td>—</td><td>✓</td></tr>
+  <tr><td>Приглушение при голосе в Discord</td><td>—</td><td>✓</td></tr>
+  <tr><td>Колесо фраз</td><td>—</td><td>✓</td></tr>
+  <tr><td>Анимированный ник</td><td>—</td><td>✓</td></tr>
+  <tr><td>Все бинды на одной вкладке</td><td>—</td><td>✓</td></tr>
+  <tr><td>Все сервера и карты DDNet</td><td>✓</td><td>✓</td></tr>
+ </table>
+</div></section>
+
+<section class="sec" id="t" style="padding-top:0"><div class="w">
+ <div class="lab rv">// 03 — ТРЕЙЛЕР</div>
+ <h2 class="h rv">56 секунд — и ты в деле</h2>
+ <div class="tr rv"><video src="rivals_ad.mp4" controls preload="metadata" poster="logo.jpg"></video></div>
+</div></section>
+
+<section class="sec" id="faq" style="padding-top:0"><div class="w">
+ <div class="lab rv">// 04 — FAQ</div>
+ <h2 class="h rv" style="margin-bottom:40px">Вопросы</h2>
+ <details class="rv"><summary>Это бесплатно?</summary><p>Да, полностью. Без рекламы и подписок.</p></details>
+ <details class="rv"><summary>Меня не забанят?</summary><p>RIVALS основан на официальном DDNet и работает на обычных серверах. Дипфлай и бинды делают то же, что можно настроить вручную в консоли.</p></details>
+ <details class="rv"><summary>Как установить?</summary><p>Скачай архив из релизов, распакуй в любую папку и запусти DDNet.exe. Все настройки клиента лежат во вкладке RIVALS.</p></details>
+ <details class="rv"><summary>Мои настройки DDNet сохранятся?</summary><p>Да. Клиент использует те же конфиги, так что бинды, скины и ник останутся.</p></details>
+</div></section>
+
+<section class="end"><div class="w">
+ <img src="logo.jpg" alt="">
+ <h2 class="h">Готов к забегу?</h2>
+ <p>Удобный и приятный клиент для DDNet.</p>
+ <div class="go"><a class="b1" href="https://github.com/scarlet134/rivals-client/releases/latest">СКАЧАТЬ RIVALS</a><a class="b2" href="https://github.com/scarlet134/rivals-client">GitHub</a></div>
+</div></section>
+
+<footer><div class="w"><span>© RIVALS Client</span><span>Основан на DDNet · не является официальным продуктом DDNet</span></div></footer>
+
+<script>
+const o=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');o.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>o.observe(el));
+</script>
+</body>
+</html>
